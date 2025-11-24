@@ -24,12 +24,26 @@
             left: 0;
             z-index: 1;
         } */
-
+        #tsparticles {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 50%;
+            padding: 30px 10px;
+            border-radius: 20px;
+            margin: auto;
+            /* background-color: white; */
+            border: 2px solid gainsboro;
+            position: absolute;
+            top: 10%;
+            left: 25%;
+            height: 50px;
+        }
 
 
         .slideshow {
             position: absolute;
-            top: 50%;
+            top: 60%;
             left: 50%;
             transform: translate(-50%, -50%);
             width: 500px;
@@ -86,7 +100,7 @@
                 color: white;
                 font-size: 20px;
                 position: absolute;
-                top: 50%;
+                top: 60%;
             }
 
             button:hover {
@@ -107,13 +121,14 @@
 </head>
 
 <body>
-    <div id="tsparticles"></div>
-    <h1
-        style="color: white; margin: auto; display: flex; justify-content: center; margin-top: 10vh; font-family: sans-serif;">
-        Upload your images
-    </h1>
-    <input type="file" name="" id="" onchange="picPicture(event)" multiple accept=".mp4,.jpg" style="padding: 10px;
-    border: none; border-radius: 30px; font-size: 20px; margin: auto; display: flex; justify-content: center;">
+    <div id="tsparticles">
+        <h1 style="color: white; font-family: sans-serif;">
+            Upload your images
+        </h1>
+        <input type="file" name="" id="" onchange="picPicture(event)" multiple accept=".mp4,.jpg" style="padding: 10px;
+    border: none; border-radius: 30px; font-size: 20px;  display: flex; justify-content: center;">
+
+    </div>
     <div class="container">
         <button onclick="previous()"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
                 width="24px" fill="#ffffff">
