@@ -5,132 +5,183 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+        }
+
+        /* #tsparticles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        } */
+
+
+
+        .slideshow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 333px;
+            overflow: hidden;
+            border-radius: 10px;
+            border: 8px solid black;
+            outline: 12px solid #222;
+        }
+
+        .slideshow img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.5s ease, transform 1.5s ease;
+            transform-origin: center center;
+            /* object-fit: cover; */
+        }
+
+        .slideshow img.fade-out {
+            opacity: 0;
+            transform: scale(1.2);
+        }
+
+        .slideshow img.fade-in {
+            opacity: 1;
+            transform: scale(1);
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            .slideshow {
+                width: 80%;
+                top: 50%;
+            }
+        }
+
+        .container {
+            display: flex;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 100px;
+
+            button {
+                background-color: rgba(0, 0, 0, 0.6);
+                border: 2px solid grey;
+                border-radius: 10px;
+                padding: 10px;
+                color: white;
+                font-size: 20px;
+                position: absolute;
+                top: 50%;
+            }
+
+            button:hover {
+                background-color: black;
+            }
+        }
+
+        .container button:nth-child(1) {
+            left: 15%;
+            /* background-color: blue; */
+        }
+
+        #my2btn {
+            right: 15%;
+            /* background-color: red; */
+        }
+    </style>
 </head>
 
 <body>
-    <input type="file" name="" id="" onchange="picPicture(event)" accept=".mp4,.jpg">
-    <img src="" alt="" id="myImage">
+    <div id="tsparticles"></div>
+    <h1
+        style="color: white; margin: auto; display: flex; justify-content: center; margin-top: 10vh; font-family: sans-serif;">
+        Upload your images
+    </h1>
+    <input type="file" name="" id="" onchange="picPicture(event)" multiple accept=".mp4,.jpg" style="padding: 10px;
+    border: none; border-radius: 30px; font-size: 20px; margin: auto; display: flex; justify-content: center;">
+    <div class="container">
+        <button onclick="previous()"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                width="24px" fill="#ffffff">
+                <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
+            </svg></button>
+        <div class="slideshow">
+            <img src="https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D"
+                alt="Slide" class="fade-in" id="myImage">
+        </div>
+        <button id="my2btn" onclick="next()"><svg xmlns="http://www.w3.org/2000/svg" height="24px"
+                viewBox="0 -960 960 960" width="24px" fill="#ffffff">
+                <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
+            </svg></button>
+    </div>
+
 </body>
 
 </html>
-<!-- <script>
-    document.getElementById('imageInput').addEventListener('change', function (event) {
-        const files = event.target.files;
-        const preview = document.getElementById('preview');
-        preview.innerHTML = ''; // Clear previous previews
 
-        Array.from(files).forEach(file => {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.style.width = '150px';
-                img.style.margin = '10px';
-                preview.appendChild(img);
-            };
-            reader.readAsDataURL(file);
-        });
-    });
-</script> -->
 <script>
+    let images = JSON.parse(localStorage.getItem('allImages')) || [];
+
+
+    let counter = 0;
+
     function picPicture(ev) {
-        let file = ev.target.files[0]
-        let reader = new FileReader()
-        // console.log(input);
-        if (!file) {
-            alert('please attach a file')
-            return
+        let files = ev.target.files;
+
+        if (!files.length) {
+            alert('Please attach a file');
+            return;
         }
-        reader.addEventListener('load', (e) => {
-            const myImage = document.getElementById('myImage');
-            console.log(e.target.result);
-            myImage.src = e.target.result
-            myImage.style.width = '200px';
-            myImage.style.height = '200px';
-            // img.style.margin = '10px';
 
-        })
-        reader.readAsDataURL(file)
-    }
-</script>
+        for (let file of files) {
+            let reader = new FileReader();
 
-<!-- <script>
-    document.getElementById('imageInput').addEventListener('change', function (event) {
-        const files = event.target.files;
-        const preview = document.getElementById('preview');
-        preview.innerHTML = ''; // Clear previous previews
-
-        Array.from(files).forEach(file => {
-            const reader = new FileReader();
             reader.onload = function (e) {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.style.width = '150px';
-                img.style.margin = '10px';
-                preview.appendChild(img);
+                images.push(e.target.result);
+                localStorage.setItem('allImages', JSON.stringify(images));
+                myImage.src = e.target.result;     // show last selected image
             };
+
             reader.readAsDataURL(file);
-        });
-    });
-</script> -->
+        }
+    }
 
-<body>
-    <div id="carousel">
-        <img id="carouselImage" src="" alt="Preview" style="width:300px;height:200px;">
-    </div>
-    <br>
-    <input type="file" id="fileInput" onchange="loadCarousel(event)" accept=".jpg,.png,.jpeg" multiple>
-    <br>
-    <button onclick="prevImage()">Previous</button>
-    <button onclick="nextImage()">Next</button>
-
-    <script>
-        let images = JSON.parse(localStorage.getItem('myImages')) || [];
-        let currentIndex = 0;
-
-        // Show first stored image if available
+    function next() {
+        if (counter === images.length - 1) {
+            counter = 0
+        }
+        else {
+            counter++
+        }
+        myImage.src = images[counter];
+    }
+    function previous() {
+        if (counter === 0) {
+            counter = images.length - 1;
+        } else {
+            counter--;
+        }
+        myImage.src = images[counter];
+    }
+    setInterval(() => {
         if (images.length > 0) {
-            document.getElementById('carouselImage').src = images[0];
+            next();
         }
+    }, 3000);
 
-        function loadCarousel(ev) {
-            const files = ev.target.files;
-            images = []; // reset
-            currentIndex = 0;
 
-            Array.from(files).forEach((file, idx) => {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    images.push(e.target.result);
-                    if (idx === 0) {
-                        document.getElementById('carouselImage').src = e.target.result;
-                    }
-                };
-                reader.readAsDataURL(file);
-            });
-            if (images.length === files.length) {
-                localStorage.setItem('myImages', JSON.stringify(images));
-            }
-        }
-
-        function showImage(index) {
-            if (images.length > 0) {
-                document.getElementById('carouselImage').src = images[index];
-            }
-        }
-
-        function prevImage() {
-            if (images.length > 0) {
-                currentIndex = (currentIndex - 1 + images.length) % images.length;
-                showImage(currentIndex);
-            }
-        }
-
-        function nextImage() {
-            if (images.length > 0) {
-                currentIndex = (currentIndex + 1) % images.length;
-                showImage(currentIndex);
-            }
-        }
-    </script>
-</body>
+</script>
