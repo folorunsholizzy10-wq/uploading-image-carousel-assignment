@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="file" name="" id="" onchange="picPicture(event)" accept=".mp4,.jpg">
+    <img src="" alt="" id="myImage">
+</body>
+
+</html>
+<!-- <script>
+    document.getElementById('imageInput').addEventListener('change', function (event) {
+        const files = event.target.files;
+        const preview = document.getElementById('preview');
+        preview.innerHTML = ''; // Clear previous previews
+
+        Array.from(files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.width = '150px';
+                img.style.margin = '10px';
+                preview.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+</script> -->
+<script>
+    function picPicture(ev) {
+        let file = ev.target.files[0]
+        let reader = new FileReader()
+        // console.log(input);
+        if (!file) {
+            alert('please attach a file')
+            return
+        }
+        reader.addEventListener('load', (e) => {
+            const myImage = document.getElementById('myImage');
+            console.log(e.target.result);
+            myImage.src = e.target.result
+            myImage.style.width = '200px';
+            myImage.style.height = '200px';
+            // img.style.margin = '10px';
+
+        })
+        reader.readAsDataURL(file)
+    }
+</script>
+
+<!-- <script>
+    document.getElementById('imageInput').addEventListener('change', function (event) {
+        const files = event.target.files;
+        const preview = document.getElementById('preview');
+        preview.innerHTML = ''; // Clear previous previews
+
+        Array.from(files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.width = '150px';
+                img.style.margin = '10px';
+                preview.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+</script> -->
+
+<body>
+    <div id="carousel">
+        <img id="carouselImage" src="" alt="Preview" style="width:300px;height:200px;">
+    </div>
+    <br>
+    <input type="file" id="fileInput" onchange="loadCarousel(event)" accept=".jpg,.png,.jpeg" multiple>
+    <br>
+    <button onclick="prevImage()">Previous</button>
+    <button onclick="nextImage()">Next</button>
+
+    <script>
+        let images = JSON.parse(localStorage.getItem('myImages')) || [];
+        let currentIndex = 0;
+
+        // Show first stored image if available
+        if (images.length > 0) {
+            document.getElementById('carouselImage').src = images[0];
+        }
+
+        function loadCarousel(ev) {
+            const files = ev.target.files;
+            images = []; // reset
+            currentIndex = 0;
+
+            Array.from(files).forEach((file, idx) => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    images.push(e.target.result);
+                    if (idx === 0) {
+                        document.getElementById('carouselImage').src = e.target.result;
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+            if (images.length === files.length) {
+                localStorage.setItem('myImages', JSON.stringify(images));
+            }
+        }
+
+        function showImage(index) {
+            if (images.length > 0) {
+                document.getElementById('carouselImage').src = images[index];
+            }
+        }
+
+        function prevImage() {
+            if (images.length > 0) {
+                currentIndex = (currentIndex - 1 + images.length) % images.length;
+                showImage(currentIndex);
+            }
+        }
+
+        function nextImage() {
+            if (images.length > 0) {
+                currentIndex = (currentIndex + 1) % images.length;
+                showImage(currentIndex);
+            }
+        }
+    </script>
+</body>
